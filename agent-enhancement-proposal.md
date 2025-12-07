@@ -1,59 +1,59 @@
 ---
 layout: default
-title: Agent Enhancement Proposal
+title: 에이전트 시스템 고도화 제안
 parent: Home
 nav_order: 3
 ---
 
-# Agent System Enhancement: Tools & Memory Integration
+# 에이전트 시스템 고도화: 도구(Tools) 및 기억(Memory) 통합
 
-## 1. Current Status Analysis
-Currently, the system utilizes **3 Agents**, but they operate primarily as **LLM (Large Language Model) inference engines**.
-*   **Missing Tools:** Agents cannot perform actions outside of generating text (e.g., cannot search the web, save files directly, or query databases).
-*   **Missing Memory:** Agents treat every execution as a new event. They do not remember previous context, user preferences, or past errors.
+## 1. 현황 분석 (Current Status)
+현재 시스템은 **3개의 에이전트**를 활용하고 있으나, 주로 **LLM(대규모 언어 모델) 추론 엔진**으로서 텍스트 생성 역할에 머물러 있습니다.
+*   **도구(Tools) 부재:** 에이전트가 텍스트 생성 외의 행동을 할 수 없습니다. (예: 웹 검색, 파일 저장, DB 조회 불가)
+*   **기억(Memory) 부재:** 에이전트가 매 실행을 새로운 사건으로 인식합니다. 이전 대화 맥락, 사용자 선호도, 과거의 오류를 기억하지 못합니다.
 
-## 2. Enhancement: Adding Tools (Function Calling)
-**"From Thinker to Doer"**
+## 2. 고도화: 도구 추가 (Function Calling)
+**"생각하는 존재(Thinker)에서 행동하는 존재(Doer)로"**
 
-### What it enables:
-*   **External Data Access:** Agents can fetch real-time data (Stock prices, Weather, Latest News) instead of relying on training data.
-*   **System Interaction:** Agents can create files, send emails, or trigger other n8n workflows.
-*   **Computation:** Agents can use a calculator or run Python scripts for precise math (LLMs are bad at math).
+### 가능해지는 것들:
+*   **외부 데이터 접근:** 학습된 데이터에 의존하는 대신 실시간 데이터(주가, 날씨, 최신 뉴스)를 가져올 수 있습니다.
+*   **시스템 상호작용:** 에이전트가 직접 파일을 생성하거나, 이메일을 보내거나, 다른 n8n 워크플로우를 트리거할 수 있습니다.
+*   **연산 능력:** LLM이 취약한 수학 계산 등을 계산기나 Python 스크립트를 실행하여 정확하게 처리합니다.
 
-### Expected Effects:
-*   **Automation Completeness:** The agent doesn't just suggest a YouTube title; it can *check* if that title exists, *generate* the thumbnail, and *upload* it.
-*   **Accuracy:** Reduced hallucinations by grounding answers in retrieved data.
+### 기대 효과:
+*   **자동화의 완결성:** 단순히 유튜브 제목만 제안하는 것이 아니라, 해당 제목이 이미 존재하는지 *확인*하고, 썸네일을 *생성*하여, *업로드*까지 수행합니다.
+*   **정확도 향상:** 검색된 데이터에 기반하여 답변하므로 환각(Hallucination) 현상이 줄어듭니다.
 
-## 3. Enhancement: Adding Memory (Context Retention)
-**"From Stateless to Stateful"**
+## 3. 고도화: 기억 추가 (Context Retention)
+**"단발성(Stateless) 실행에서 연속성(Stateful) 있는 실행으로"**
 
-### What it enables:
-*   **Short-term Memory (Window Buffer):** The agent remembers the last 5-10 turns of conversation. "Change the title" works because it remembers what the title was.
-*   **Long-term Memory (Vector Store / RAG):** The agent remembers documents, PDFs, or past successful workflows stored in a database (e.g., Pinecone, Supabase).
+### 가능해지는 것들:
+*   **단기 기억 (Window Buffer):** 최근 5~10번의 대화를 기억합니다. "제목 좀 바꿔줘"라고 말해도 무엇을 바꾸라는 것인지 알아듣습니다.
+*   **장기 기억 (Vector Store / RAG):** 문서, PDF, 또는 과거의 성공적인 워크플로우 데이터를 DB(Pinecone, Supabase 등)에 저장하고 기억합니다.
 
-### Expected Effects:
-*   **Personalization:** The agent learns your style (e.g., "You prefer punchy titles") over time.
-*   **Complex Reasoning:** Can handle multi-step tasks where step 3 depends on the result of step 1.
+### 기대 효과:
+*   **개인화:** 시간이 지날수록 사용자의 스타일(예: "자극적인 제목을 선호함")을 학습합니다.
+*   **복합 추론:** 1단계의 결과가 3단계에 영향을 미치는 다단계 작업을 수행할 수 있습니다.
 
-## 4. Evolution Roadmap
+## 4. 발전 로드맵 (Evolution Roadmap)
 
-### Phase 1: Tool Integration (Active)
-*   **Action:** Connect n8n "Tools" to the AI Agent node.
-*   **Examples:**
-    *   `Google Search Tool`: For researching trending topics.
-    *   `Wikipedia Tool`: For fact-checking.
-    *   `Custom n8n Workflow Tool`: To trigger the "Image Generation" workflow we built earlier.
+### 1단계: 도구 통합 (Active)
+*   **실행:** n8n AI Agent 노드에 "Tools" 연결
+*   **예시:**
+    *   `Google Search Tool`: 트렌딩 토픽 조사를 위해 사용.
+    *   `Wikipedia Tool`: 팩트 체크를 위해 사용.
+    *   `Custom n8n Workflow Tool`: 앞서 만든 "이미지 생성" 워크플로우를 에이전트가 필요할 때 직접 호출.
 
-### Phase 2: Memory Implementation (Contextual)
-*   **Action:** Add "Window Buffer Memory" to the n8n Agent node.
-*   **Goal:** Enable back-and-forth refinement of prompts without restating the context.
+### 2단계: 기억 구현 (Contextual)
+*   **실행:** n8n Agent 노드에 "Window Buffer Memory" 추가
+*   **목표:** 매번 상황을 다시 설명할 필요 없이, 대화를 주고받으며 결과물을 다듬을 수 있게 함.
 
-### Phase 3: RAG (Retrieval-Augmented Generation)
-*   **Action:** Connect a Vector Store.
-*   **Goal:** Upload your brand guidelines or past successful scripts. The agent searches this "knowledge base" before generating new content.
+### 3단계: RAG (검색 증강 생성)
+*   **실행:** Vector Store 연결
+*   **목표:** 브랜드 가이드라인이나 과거 성공한 대본들을 업로드. 에이전트가 새 콘텐츠를 만들 때 이 "지식 저장소"를 먼저 검색하여 참고함.
 
-### Phase 4: Multi-Agent Orchestration
-*   **Action:** Assign specific roles.
-    *   *Agent A (Researcher):* Uses Search Tool to find topics.
-    *   *Agent B (Writer):* Uses Memory of your style to write scripts.
-    *   *Agent C (Reviewer):* Checks against safety guidelines (like the SFW filter we added).
+### 4단계: 멀티 에이전트 협업 (Orchestration)
+*   **실행:** 역할 분담
+    *   *Agent A (연구원):* Search Tool을 써서 소재 발굴.
+    *   *Agent B (작가):* 사용자의 스타일(Memory)을 참고하여 대본 작성.
+    *   *Agent C (검수자):* 안전 가이드라인(SFW 필터 등)을 기준으로 최종 검수.
