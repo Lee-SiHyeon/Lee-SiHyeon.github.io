@@ -1,0 +1,5 @@
+title: "AI Automation Portfolio"
+description: "n8n과 AI를 활용한 자동화 프로젝트 정리"
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-seo-tag
