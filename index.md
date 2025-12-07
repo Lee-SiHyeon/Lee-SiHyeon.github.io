@@ -38,6 +38,14 @@
 ### 📝 개발 일지 & 문서 (Dev Log & Docs)
 *   [🛡️ 주제 선정 고도화 (Safety Filtering)](./topic-selection-enhancement.md): YouTube 정책 준수를 위한 AI 프롬프트 엔지니어링 적용 사례
 
+### 🗂️ 사이트 맵 (Site Map)
+```text
+📦 AI Automation Portfolio
+ ┣ 🏠 index.md (Main Project Overview)
+ ┗ 📂 Dev Log & Docs
+    ┗ 🛡️ topic-selection-enhancement.md (Safety Filtering Logic)
+```
+
 ---
 
 ### 📂 Repository
