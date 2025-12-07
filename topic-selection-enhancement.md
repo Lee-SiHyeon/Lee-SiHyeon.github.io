@@ -1,3 +1,10 @@
+---
+layout: default
+title: 주제 선정 고도화
+parent: Home
+nav_order: 2
+---
+
 # 🛡️ 주제 선정 고도화 (Topic Selection Enhancement)
 
 ## 🛑 문제 상황 (Problem)
