@@ -20,11 +20,11 @@ This project automates the creation of YouTube Shorts using n8n, Google Gemini 2
 
 ## Files
 
-- `YouTube_Shorts_Automation_Gemini.json`: The complete n8n workflow file.
 - `start_google_drive_mcp.ps1`: PowerShell script to start the Google Drive MCP server for file management.
+- *(Note: The n8n workflow JSON file is kept locally for security reasons.)*
 
 ## Usage
 
-1.  Import `YouTube_Shorts_Automation_Gemini.json` into n8n.
+1.  Use the locally saved `YouTube_Shorts_Automation_Gemini.json`.
 2.  Configure your Google Cloud credentials (Vertex AI).
 3.  Run the workflow.
