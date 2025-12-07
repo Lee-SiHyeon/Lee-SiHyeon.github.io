@@ -35,6 +35,9 @@
 *   **AI 윤리 필터 우회**: 이미지 생성 시 "Safety Block"이 발생하는 문제를 해결하기 위해, 중간에 `Prompt Engineering Agent`를 두어 프롬프트를 추상적이고 안전한 예술적 묘사로 변환했습니다.
 *   **데이터 아카이빙**: 디버깅과 품질 검수를 위해 각 단계의 결과물(txt, mp3, png)을 Google Drive에 타임스탬프와 함께 저장하는 시스템을 구축했습니다.
 
+### 📝 개발 일지 & 문서 (Dev Log & Docs)
+*   [🛡️ 주제 선정 고도화 (Safety Filtering)](./topic-selection-enhancement.md): YouTube 정책 준수를 위한 AI 프롬프트 엔지니어링 적용 사례
+
 ---
 
 ### 📂 Repository
