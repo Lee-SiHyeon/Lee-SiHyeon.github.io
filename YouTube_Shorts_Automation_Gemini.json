@@ -441,7 +441,7 @@
     },
     {
       "parameters": {
-        "modelName": "gemini-2.0-flash-exp",
+        "modelName": "models/gemini-2.5-pro",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
@@ -451,7 +451,47 @@
         700
       ],
       "id": "5fd46fb9-9319-4c27-a57b-5478d3375097",
-      "name": "Gemini Model 2",
+      "name": "Gemini Model Script (Pro)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "U7Ht5KobgvPGZaBR",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        800
+      ],
+      "id": "11111111-2222-3333-4444-555555555555",
+      "name": "Gemini Model Image (Pro)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "U7Ht5KobgvPGZaBR",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "66666666-7777-8888-9999-aaaaaaaaaaaa",
+      "name": "Gemini Model TTS (Flash Lite)",
       "credentials": {
         "googlePalmApi": {
           "id": "U7Ht5KobgvPGZaBR",
@@ -673,19 +713,31 @@
         ]
       ]
     },
-    "Gemini Model 2": {
+    "Gemini Model Script (Pro)": {
       "ai_languageModel": [
         [
           {
             "node": "3. Write Script (Gemini Agent)",
             "type": "ai_languageModel",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Gemini Model Image (Pro)": {
+      "ai_languageModel": [
+        [
           {
             "node": "Generate Image Prompt (Gemini Agent)",
             "type": "ai_languageModel",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Gemini Model TTS (Flash Lite)": {
+      "ai_languageModel": [
+        [
           {
             "node": "TTS Prep Agent (Gemini)",
             "type": "ai_languageModel",
