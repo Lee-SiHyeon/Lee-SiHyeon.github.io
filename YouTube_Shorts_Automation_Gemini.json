@@ -150,7 +150,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n  const base64 = item.json.predictions[0].bytesBase64Encoded;\n  return {\n    json: item.json,\n    binary: {\n      image: {\n        data: base64,\n        mimeType: 'image/png',\n        fileExtension: 'png',\n        fileName: 'generated_image.png'\n      }\n    }\n  };\n});"
+        "jsCode": "return $input.all().map(item => {\n  const base64 = item.json.predictions[0].bytesBase64Encoded;\n  // MEMORY OPTIMIZATION: Remove heavy base64 string from JSON\n  delete item.json.predictions;\n  \n  return {\n    json: item.json,\n    binary: {\n      image: {\n        data: base64,\n        mimeType: 'image/png',\n        fileExtension: 'png',\n        fileName: 'generated_image.png'\n      }\n    }\n  };\n});"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -163,7 +163,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n  return {\n    json: item.json,\n    binary: {\n      audio: {\n        data: item.json.audioContent,\n        mimeType: 'audio/mp3',\n        fileExtension: 'mp3',\n        fileName: 'generated_audio.mp3'\n      }\n    }\n  };\n});"
+        "jsCode": "return $input.all().map(item => {\n  const audioContent = item.json.audioContent;\n  // MEMORY OPTIMIZATION: Remove heavy base64 string from JSON\n  delete item.json.audioContent;\n\n  return {\n    json: item.json,\n    binary: {\n      audio: {\n        data: audioContent,\n        mimeType: 'audio/mp3',\n        fileExtension: 'mp3',\n        fileName: 'generated_audio.mp3'\n      }\n    }\n  };\n});"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -625,11 +625,6 @@
       "main": [
         [
           {
-            "node": "Merge Results",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Prepare Audio for Drive",
             "type": "main",
             "index": 0
@@ -652,11 +647,6 @@
       "main": [
         [
           {
-            "node": "Merge Results",
-            "type": "main",
-            "index": 1
-          },
-          {
             "node": "Save Image to Drive",
             "type": "main",
             "index": 0
@@ -671,6 +661,28 @@
             "node": "Save Audio to Drive",
             "type": "main",
             "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Audio to Drive": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Image to Drive": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 1
           }
         ]
       ]
