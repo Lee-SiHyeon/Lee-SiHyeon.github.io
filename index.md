@@ -54,8 +54,30 @@ nav_order: 1
 
 ---
 
+## 🔬 Project: mcp-server-3gpp — AutoRAG MCP 서버
+
+3GPP/RFC/ETSI 표준 규격 문서를 LLM이 자율적으로 검색할 수 있도록 하는 **MCP(Model Context Protocol) 서버**입니다. SQLite + FTS5 + sqlite-vec 기반의 하이브리드 검색 엔진을 구축했습니다.
+
+### 🛠️ 기술 스택
+- **MCP Server:** Node.js (stdio transport, JSON-RPC 2.0)
+- **DB:** SQLite 3 + FTS5 + sqlite-vec (하이브리드 검색)
+- **Extraction:** PyMuPDF · regex (PDF), IETF RFC parser (TXT)
+- **Corpus:** 207 specs · 66,109 sections · 416MB
+
+### 📊 시각화 보고서
+
+| 보고서 | 설명 |
+|--------|------|
+| [📈 Corpus 현황 보고서](./mcp-corpus-report.html) | 207개 스펙 인제스트 현황, 시리즈별 분포, 커버리지 |
+| [🔧 AutoRAG Pipeline E2E](./mcp-autorag-pipeline.html) | 다운로드→추출→DB빌드→MCP래핑 전체 파이프라인 |
+
+### 🗄️ GitHub Repository
+- [mcp-server-3gpp](https://github.com/Lee-SiHyeon/mcp-server-3gpp) — Git LFS로 corpus DB(416MB) 공개 배포
+
+---
+
 ### 📂 Repository
-이 프로젝트의 소스 코드는 아래 리포지토리에서 확인할 수 있습니다.
+이 포트폴리오의 소스 코드는 아래 리포지토리에서 확인할 수 있습니다.
 *   [GitHub Repository Link](https://github.com/Lee-SiHyeon/Lee-SiHyeon.github.io)
 
 ---
