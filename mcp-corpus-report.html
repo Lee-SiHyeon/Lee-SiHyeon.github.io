@@ -251,12 +251,12 @@
   <div class="kpi-grid">
     <div class="kpi-card" style="--accent-color:#58a6ff">
       <div class="kpi-label">Total Specs</div>
-      <div class="kpi-value">188</div>
-      <div class="kpi-sub">3GPP/ETSI 99 + RFC 89</div>
+      <div class="kpi-value">207</div>
+      <div class="kpi-sub">3GPP/ETSI 118 + RFC 89</div>
     </div>
     <div class="kpi-card" style="--accent-color:#3fb950">
       <div class="kpi-label">Total Sections</div>
-      <div class="kpi-value">89,987</div>
+      <div class="kpi-value">93,279</div>
       <div class="kpi-sub">FTS5 full-text indexed</div>
     </div>
     <div class="kpi-card" style="--accent-color:#d2a8ff">
@@ -419,7 +419,7 @@
       </div>
       <div class="timeline-item">
         <div class="timeline-title">RFC Full Corpus — 86 RFCs 완성</div>
-        <div class="timeline-desc">89개 우선순위 RFC 전체 로드. 총 188 specs, 89,987 sections.</div>
+        <div class="timeline-desc">89개 우선순위 RFC 전체 로드. 총 207 specs, 93,279 sections.</div>
         <div class="timeline-commit">5b42782</div>
       </div>
     </div>
@@ -505,6 +505,7 @@ const COLORS = {
   'TS 33.xxx':'#bc8cff','TS 25.xxx':'#ffe585','TR':'#8b949e'
 };
 
+// updated
 const seriesData = [
   { label:'TS 38.xxx (5G NR)', specs:24, sections:19413 },
   { label:'TS 36.xxx (LTE)', specs:14, sections:14364 },
@@ -554,7 +555,7 @@ const seriesTableData = [
 ];
 
 const maxSections = Math.max(...seriesData.map(d=>d.sections));
-const totalSections = 89987;
+const totalSections = 93279;
 
 // Bar chart
 new Chart(document.getElementById('seriesBar'), {
