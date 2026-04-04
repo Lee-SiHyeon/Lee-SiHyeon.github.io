@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mcp-server-3gpp Corpus Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --rfc-color: #79c0ff;
+    --ts38-color: #3fb950;
+    --ts36-color: #58a6ff;
+    --ts51-color: #ffa657;
+    --ts23-color: #d2a8ff;
+    --ts29-color: #ff7b72;
+    --ts24-color: #56d364;
+    --ts34-color: #f0883e;
+    --ts33-color: #bc8cff;
+    --ts31-color: #80ffea;
+    --ts25-color: #ffe585;
+    --tr-color: #8b949e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  header p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent-color, var(--accent));
+  }
+  .kpi-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .kpi-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent-color, var(--accent));
+    line-height: 1.1;
+    margin: 0.4rem 0 0.2rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  /* Section */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title span { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
+
+  /* Charts grid */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+  .chart-wrap { position: relative; height: 300px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th {
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .mono { font-family: 'SFMono-Regular', Consolas, monospace; color: var(--accent); font-size: 0.82rem; }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: var(--surface2);
+  }
+
+  /* Progress bar */
+  .bar-bg { background: var(--surface2); border-radius: 4px; height: 6px; }
+  .bar-fill { height: 6px; border-radius: 4px; }
+
+  /* RFC grid */
+  .rfc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.7rem;
+  }
+  .rfc-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem;
+  }
+  .rfc-cat {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .rfc-list { color: var(--text-muted); margin-top: 0.3rem; line-height: 1.8; }
+
+  /* Agent status */
+  .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .agent-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .agent-name { font-weight: 700; color: var(--accent4); font-size: 0.9rem; }
+  .agent-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot.running { background: var(--accent2); animation: pulse 1.5s infinite; }
+  .dot.done { background: var(--accent2); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .agent-task { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 1.5rem; }
+  .timeline::before { content:''; position:absolute; left:0.35rem; top:0; bottom:0; width:2px; background:var(--border); border-radius:2px; }
+  .timeline-item { position:relative; margin-bottom:1rem; }
+  .timeline-item::before { content:''; position:absolute; left:-1.22rem; top:0.35rem; width:8px; height:8px; border-radius:50%; background:var(--accent2); border:2px solid var(--bg); }
+  .timeline-title { font-weight:600; font-size:0.85rem; color:var(--text); }
+  .timeline-desc { font-size:0.78rem; color:var(--text-muted); margin-top:0.15rem; }
+  .timeline-commit { font-family:monospace; font-size:0.7rem; color:var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="max-width:1200px;margin:0 auto;">
+    <h1>
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 010-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/>
+      </svg>
+      mcp-server-3gpp — Corpus Report
+    </h1>
+    <p>3GPP / ETSI / IETF RFC 스펙 AutoRAG 시스템 · 최종 업데이트: 2026-04-04</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--accent-color:#58a6ff">
+      <div class="kpi-label">Total Specs</div>
+      <div class="kpi-value">188</div>
+      <div class="kpi-sub">3GPP/ETSI 99 + RFC 89</div>
+    </div>
+    <div class="kpi-card" style="--accent-color:#3fb950">
+      <div class="kpi-label">Total Sections</div>
+      <div class="kpi-value">89,987</div>
+      <div class="kpi-sub">FTS5 full-text indexed</div>
+    </div>
+    <div class="kpi-card" style="--accent-color:#d2a8ff">
+      <div class="kpi-label">3GPP/ETSI Specs</div>
+      <div class="kpi-value">99</div>
+      <div class="kpi-sub">2G → 5G NR + NTN + IMS</div>
+    </div>
+    <div class="kpi-card" style="--accent-color:#79c0ff">
+      <div class="kpi-label">IETF RFC</div>
+      <div class="kpi-value">89</div>
+      <div class="kpi-sub">SIP · TLS · QUIC · OAuth · WebRTC</div>
+    </div>
+    <div class="kpi-card" style="--accent-color:#ffa657">
+      <div class="kpi-label">MCP Tools</div>
+      <div class="kpi-value">8</div>
+      <div class="kpi-sub">search · TOC · section · guide</div>
+    </div>
+    <div class="kpi-card" style="--accent-color:#ff7b72">
+      <div class="kpi-label">Test Coverage</div>
+      <div class="kpi-value">46/46</div>
+      <div class="kpi-sub">node:test 100% pass</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-grid">
+    <div class="section" style="margin-bottom:0">
+      <div class="section-title">📊 Sections by Series</div>
+      <div class="chart-wrap">
+        <canvas id="seriesBar"></canvas>
+      </div>
+    </div>
+    <div class="section" style="margin-bottom:0">
+      <div class="section-title">🥧 Spec Distribution <span>(by count)</span></div>
+      <div class="chart-wrap">
+        <canvas id="specDonut"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Specs Table -->
+  <div class="section">
+    <div class="section-title">🏆 Top 15 Specs <span>by section count</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Spec ID</th><th>Series</th><th>Sections</th><th>Coverage</th>
+        </tr>
+      </thead>
+      <tbody id="topSpecs"></tbody>
+    </table>
+  </div>
+
+  <!-- RFC Coverage -->
+  <div class="section">
+    <div class="section-title">🌐 RFC Coverage <span>89 IETF RFCs — core internet protocols</span></div>
+    <div class="rfc-grid">
+      <div class="rfc-card">
+        <div class="rfc-cat">SIP / VoIP</div>
+        <div class="rfc-list">3261 · 3262 · 3263 · 3264 · 3265 · 3311 · 3428 · 3515</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">Diameter</div>
+        <div class="rfc-list">3588 · 4005 · 4006 · 4072 · 5779 · 6733</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">TLS / DTLS</div>
+        <div class="rfc-list">5246 · 8446 · 9147</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">QUIC</div>
+        <div class="rfc-list">9000 · 9001 · 9002</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">HTTP / HTTP2 / HTTP3</div>
+        <div class="rfc-list">7540 · 9110 · 9112 · 9113 · 9114</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">OAuth / JWT</div>
+        <div class="rfc-list">6749 · 6750 · 7519 · 8693 · 9068</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">WebRTC</div>
+        <div class="rfc-list">8825 · 8826 · 8827 · 8834 · 8835</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">SSH</div>
+        <div class="rfc-list">4251 · 4252 · 4253 · 4254</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">DNS / DNSSEC</div>
+        <div class="rfc-list">1034 · 1035 · 4033 · 4034 · 4035 · 7858 · 8484</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">SCTP / RTP / SDP</div>
+        <div class="rfc-list">4960 · 6096 · 3550 · 3551 · 4566</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">XMPP / NETCONF / YANG</div>
+        <div class="rfc-list">6120 · 6121 · 6241 · 6242 · 8341 · 7950</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">BGP / OSPF / MPLS / LDP</div>
+        <div class="rfc-list">4271 · 4760 · 2328 · 5340 · 3031 · 3032 · 5036</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">IPsec / IKEv2</div>
+        <div class="rfc-list">4301 · 4303 · 7296</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">DHCP / NTP / RADIUS</div>
+        <div class="rfc-list">2131 · 2132 · 8415 · 5905 · 2865 · 2866 · 3162 · 5080</div>
+      </div>
+      <div class="rfc-card">
+        <div class="rfc-cat">NAT / IPv6 / STUN / TURN</div>
+        <div class="rfc-list">4787 · 5382 · 4291 · 8200 · 3489 · 5389 · 5766</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3GPP Coverage Map -->
+  <div class="section">
+    <div class="section-title">🏗️ 3GPP/ETSI Coverage Map</div>
+    <table>
+      <thead>
+        <tr><th>Series</th><th>Scope</th><th>Specs</th><th>Sections</th><th>Share</th></tr>
+      </thead>
+      <tbody id="seriesTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Build History / Timeline -->
+  <div class="section">
+    <div class="section-title">📅 Build Timeline</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-title">v2.0 Launch — SQLite FTS5 AutoRAG</div>
+        <div class="timeline-desc">26 specs → SQLite + FTS5 하이브리드 검색. 8 MCP tools, 46 tests.</div>
+        <div class="timeline-commit">0ca637b · 3ac70de · 2b99597</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Bulk ETSI Expansion — 26 → 96 specs</div>
+        <div class="timeline-desc">70개 신규 PDF (29.xxx SBI, 23.xxx, 38.xxx, 33.xxx, 36.xxx). 70,992 sections.</div>
+        <div class="timeline-commit">bulk-ts-download agent</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">RFC Integration Pipeline</div>
+        <div class="timeline-desc">download_rfc.py + extract_rfc_structure.py + loadRfcSections.js 구축. RFC 3261/6733/8446 파일럿.</div>
+        <div class="timeline-commit">b562e5e → 9403af2</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Operational Knowledge MCP Tool</div>
+        <div class="timeline-desc">get_ingest_guide (8번째 툴) + MCP Resources. ETSI/RFC/AutoRAG 가이드 내장.</div>
+        <div class="timeline-commit">d303028</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">DOCX/DOC Extractor — Legacy 전체 교체</div>
+        <div class="timeline-desc">python-docx + antiword 추출기. ts_51_010_1 (14,358), ts_34_123_1 (2,877) 등 레거시 flat→구조화.</div>
+        <div class="timeline-commit">2ef132f</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">RFC Full Corpus — 86 RFCs 완성</div>
+        <div class="timeline-desc">89개 우선순위 RFC 전체 로드. 총 188 specs, 89,987 sections.</div>
+        <div class="timeline-commit">5b42782</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Running Agents -->
+  <div class="section">
+    <div class="section-title">🤖 Atlas Agents <span>현재 실행 중</span></div>
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="agent-name">atlas-a · sqlite-vec</div>
+        <div class="agent-status"><span class="dot running"></span> Running</div>
+        <div class="agent-task">sqlite-vec 설치 + semantic vector search 활성화 (vector=true)</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">atlas-b · RFC / TOC Fix</div>
+        <div class="agent-status"><span class="dot running"></span> Running</div>
+        <div class="agent-task">RFC 464XLAT 추가 · ts_24_229 TOC 수정 · ts_38_523_1 검증</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">atlas-c · More TS Specs</div>
+        <div class="agent-status"><span class="dot running"></span> Running</div>
+        <div class="agent-task">추가 3GPP 시리즈 수집 (23.xxx, 26.xxx, 38.xxx missing)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture -->
+  <div class="section">
+    <div class="section-title">⚙️ Architecture</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+        <div style="color:var(--accent);font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Storage</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;line-height:2;">
+          SQLite 3.51.3 + FTS5<br>
+          better-sqlite3 v11.8.1<br>
+          WAL journal mode<br>
+          Content-sync triggers
+        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+        <div style="color:var(--accent2);font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Search</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;line-height:2;">
+          Hybrid: α=0.4 keyword<br>
+          (1-α) semantic vector<br>
+          BM25 FTS5 ranking<br>
+          Graceful vec degradation
+        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+        <div style="color:var(--accent4);font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Ingestion Pipeline</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;line-height:2;">
+          ETSI PDF → pdfplumber<br>
+          3GPP DOCX → python-docx<br>
+          Legacy DOC → antiword<br>
+          RFC TXT → regex parser
+        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+        <div style="color:var(--accent5);font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">MCP Server</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;line-height:2;">
+          Node.js v24 + ESM<br>
+          @modelcontextprotocol/sdk<br>
+          8 tools + 3 Resources<br>
+          stdio transport
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="https://github.com/Lee-SiHyeon/mcp-server-3gpp">github.com/Lee-SiHyeon/mcp-server-3gpp</a>
+  &nbsp;·&nbsp; Generated 2026-04-04 &nbsp;·&nbsp; Lee-SiHyeon
+</footer>
+
+<script>
+const COLORS = {
+  'TS 38.xxx':'#3fb950','TS 36.xxx':'#58a6ff','TS 51.xxx':'#ffa657',
+  'TS 23.xxx':'#d2a8ff','TS 29.xxx':'#ff7b72','RFC':'#79c0ff',
+  'TS 34.xxx':'#f0883e','TS 24.xxx':'#56d364','TS 31.xxx':'#80ffea',
+  'TS 33.xxx':'#bc8cff','TS 25.xxx':'#ffe585','TR':'#8b949e'
+};
+
+const seriesData = [
+  { label:'TS 38.xxx (5G NR)', specs:24, sections:19413 },
+  { label:'TS 36.xxx (LTE)', specs:14, sections:14364 },
+  { label:'TS 51.xxx (2G)', specs:1, sections:14358 },
+  { label:'TS 23.xxx (Architecture)', specs:20, sections:8798 },
+  { label:'TS 29.xxx (SBI/EPC)', specs:18, sections:8660 },
+  { label:'RFC (IETF)', specs:91, sections:7177 },
+  { label:'TS 34.xxx (Conformance)', specs:3, sections:4867 },
+  { label:'TS 24.xxx (NAS/IMS)', specs:4, sections:4556 },
+  { label:'TS 31.xxx (USIM)', specs:3, sections:3100 },
+  { label:'TS 33.xxx (Security)', specs:9, sections:2491 },
+  { label:'TS 25.xxx (3G RAN)', specs:1, sections:2203 },
+  { label:'TR (Technical Report)', specs:2, sections:554 },
+];
+
+const topSpecs = [
+  {id:'ts_51_010_1',desc:'2G Protocol Conformance',sections:14358},
+  {id:'ts_38_133',desc:'5G NR Requirements',sections:9527},
+  {id:'ts_36_133',desc:'4G LTE Requirements',sections:5819},
+  {id:'ts_34_123_1',desc:'3G Protocol Conformance',sections:2877},
+  {id:'ts_36_523_1',desc:'4G Conformance Test',sections:2292},
+  {id:'ts_25_331',desc:'3G UMTS RRC',sections:2203},
+  {id:'ts_29_522',desc:'5G Namf Service',sections:2000},
+  {id:'ts_31_121',desc:'USIM Test Spec',sections:1987},
+  {id:'ts_34_229_1',desc:'4G IMS Conformance',sections:1771},
+  {id:'ts_36_101',desc:'4G LTE UE Radio',sections:1590},
+  {id:'ts_38_523_1',desc:'5G NR Conformance',sections:1561},
+  {id:'ts_38_331',desc:'5G NR RRC',sections:1512},
+  {id:'ts_24_008',desc:'2G/3G/4G NAS',sections:1481},
+  {id:'ts_24_501',desc:'5G NAS (5GMM)',sections:1383},
+  {id:'ts_23_502',desc:'5G System Procedures',sections:1379},
+];
+
+const seriesTableData = [
+  {series:'TS 38.xxx',scope:'5G NR — radio, RRC, SBI procedures',specs:24,sections:19413},
+  {series:'TS 36.xxx',scope:'4G LTE — E-UTRAN, EPC, conformance',specs:14,sections:14364},
+  {series:'TS 51.xxx',scope:'2G GSM — protocol conformance',specs:1,sections:14358},
+  {series:'TS 23.xxx',scope:'Architecture — system, procedures, services',specs:20,sections:8798},
+  {series:'TS 29.xxx',scope:'Core network — SBI APIs, EPC interfaces',specs:18,sections:8660},
+  {series:'RFC (IETF)',scope:'Internet protocols — SIP, TLS, QUIC, HTTP…',specs:91,sections:7177},
+  {series:'TS 34.xxx',scope:'Conformance testing (3G/4G/5G IMS)',specs:3,sections:4867},
+  {series:'TS 24.xxx',scope:'NAS protocols + IMS SIP (24.229)',specs:4,sections:4556},
+  {series:'TS 31.xxx',scope:'USIM / EF / USAT',specs:3,sections:3100},
+  {series:'TS 33.xxx',scope:'Security — AKA, USIM, 5G security',specs:9,sections:2491},
+  {series:'TS 25.xxx',scope:'3G UMTS RAN — RRC, transport',specs:1,sections:2203},
+  {series:'TR',scope:'Technical Reports — research phase docs',specs:2,sections:554},
+];
+
+const maxSections = Math.max(...seriesData.map(d=>d.sections));
+const totalSections = 89987;
+
+// Bar chart
+new Chart(document.getElementById('seriesBar'), {
+  type: 'bar',
+  data: {
+    labels: seriesData.map(d => d.label.split(' (')[0]),
+    datasets: [{
+      data: seriesData.map(d => d.sections),
+      backgroundColor: seriesData.map(d => {
+        const key = d.label.split(' (')[0].replace(' (IETF)','');
+        return COLORS[key] || '#58a6ff';
+      }),
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} sections` }
+    }},
+    scales: {
+      x: { ticks: { color: '#8b949e', font: { size: 10 } }, grid: { color: '#30363d' } },
+      y: { ticks: { color: '#8b949e', font: { size: 10 }, callback: v => v >= 1000 ? v/1000+'k' : v }, grid: { color: '#21262d' } }
+    }
+  }
+});
+
+// Donut chart
+new Chart(document.getElementById('specDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: seriesData.map(d => d.label.split(' (')[0]),
+    datasets: [{
+      data: seriesData.map(d => d.specs),
+      backgroundColor: seriesData.map(d => {
+        const key = d.label.split(' (')[0].replace(' (IETF)','');
+        return COLORS[key] || '#58a6ff';
+      }),
+      borderColor: '#161b22',
+      borderWidth: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'right', labels: { color: '#8b949e', font: { size: 10 }, boxWidth: 12, padding: 8 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} specs` } }
+    }
+  }
+});
+
+// Top specs table
+const tbody = document.getElementById('topSpecs');
+topSpecs.forEach((s, i) => {
+  const pct = (s.sections / maxSections * 100).toFixed(1);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="color:var(--text-muted);font-size:0.8rem;">${i+1}</td>
+    <td><span class="mono">${s.id}</span></td>
+    <td style="color:var(--text-muted);font-size:0.8rem;">${s.desc}</td>
+    <td style="font-variant-numeric:tabular-nums;font-weight:600;">${s.sections.toLocaleString()}</td>
+    <td style="min-width:100px;">
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:var(--accent2);"></div></div>
+    </td>`;
+  tbody.appendChild(tr);
+});
+
+// Series table
+const stbody = document.getElementById('seriesTable');
+seriesTableData.forEach(d => {
+  const pct = (d.sections / totalSections * 100).toFixed(1);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="font-weight:600;color:var(--accent);font-size:0.82rem;">${d.series}</td>
+    <td style="color:var(--text-muted);font-size:0.8rem;">${d.scope}</td>
+    <td style="text-align:center;"><span class="badge">${d.specs}</span></td>
+    <td style="font-variant-numeric:tabular-nums;">${d.sections.toLocaleString()}</td>
+    <td style="color:var(--text-muted);font-size:0.8rem;">${pct}%</td>`;
+  stbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
