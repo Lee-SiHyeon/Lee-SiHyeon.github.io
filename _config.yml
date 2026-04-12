@@ -6,25 +6,44 @@ color_scheme: dark
 
 nav_order: 1
 
-# Navigation structure
+# Navigation structure - 프로젝트 중심 재구성
 nav:
   - title: Home
     url: /
+    
+  - title: "🎬 YouTube Shorts Automation"
+    url: /youtube-shorts-overview.html
     children:
       - title: "🛡️ 주제 선정 고도화"
         url: /topic-selection-enhancement.html
-      - title: "🤖 에이전트 시스템 고도화 제안"
-        url: /agent-enhancement-proposal.html
-      - title: "🔄 워크플로우 개선 및 TTS 에이전트 도입 계획"
+      - title: "🔄 워크플로우 개선"
         url: /workflow-refactoring-plan.html
-      - title: "📊 Copilot Agent vs Plan 모드 분석"
-        url: /copilot-mode-analysis.html
-      - title: "🔗 AI 에이전트에 MCP 서버 강제 사용 가이드"
+      - title: "🤖 에이전트 시스템 고도화"
+        url: /agent-enhancement-proposal.html
+      - title: "📊 OpenCoreAI 참고 분석"
+        url: /youtube-shorts-automation-reference-analysis.html
+        
+  - title: "🔬 MCP Server 3GPP"
+    url: /mcp-server-overview.html
+    children:
+      - title: "🔗 Integration Guide"
         url: /mcp-server-integration-guide.html
-  - title: "🎬 YouTube Shorts Automation - 완전 참고 분석"
-    url: /youtube-shorts-automation-reference-analysis.html
-  - title: "📋 n8n GitHub Webhook to CSV 자동화 설정 가이드"
-    url: /n8n-github-webhook-setup.html
+      - title: "📊 Corpus Report"
+        url: /mcp-corpus-report.html
+      - title: "🔧 Pipeline Architecture"
+        url: /mcp-autorag-pipeline.html
+        
+  - title: "🛠️ Tools & Guides"
+    children:
+      - title: "📋 n8n GitHub Webhook"
+        url: /n8n-github-webhook-setup.html
+      - title: "📊 Copilot 모드 분석"
+        url: /copilot-mode-analysis.html
+      - title: "📊 oh-my-copilot 대시보드"
+        url: /oh-my-copilot-dashboard.html
+        
+  - title: "📚 About"
+    url: /about.html
 
 plugins:
   - jekyll-seo-tag
