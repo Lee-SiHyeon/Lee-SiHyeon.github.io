@@ -4,6 +4,28 @@ remote_theme: just-the-docs/just-the-docs
 
 color_scheme: dark
 
+nav_order: 1
+
+# Navigation structure
+nav:
+  - title: Home
+    url: /
+    children:
+      - title: "🛡️ 주제 선정 고도화"
+        url: /topic-selection-enhancement.html
+      - title: "🤖 에이전트 시스템 고도화 제안"
+        url: /agent-enhancement-proposal.html
+      - title: "🔄 워크플로우 개선 및 TTS 에이전트 도입 계획"
+        url: /workflow-refactoring-plan.html
+      - title: "📊 Copilot Agent vs Plan 모드 분석"
+        url: /copilot-mode-analysis.html
+      - title: "🔗 AI 에이전트에 MCP 서버 강제 사용 가이드"
+        url: /mcp-server-integration-guide.html
+  - title: "🎬 YouTube Shorts Automation - 완전 참고 분석"
+    url: /youtube-shorts-automation-reference-analysis.html
+  - title: "📋 n8n GitHub Webhook to CSV 자동화 설정 가이드"
+    url: /n8n-github-webhook-setup.html
+
 plugins:
   - jekyll-seo-tag
   - jekyll-remote-theme
